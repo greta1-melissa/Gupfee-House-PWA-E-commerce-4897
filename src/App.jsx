@@ -26,6 +26,7 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const OrdersPage = lazy(() => import('./pages/OrdersPage'));
 const BlogPage = lazy(() => import('./pages/BlogPage'));
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
@@ -49,11 +50,13 @@ function App() {
               <WishlistProvider>
                 <Router>
                   <div className="min-h-screen bg-gray-50">
-                    <Suspense fallback={
-                      <div className="min-h-screen flex items-center justify-center">
-                        <LoadingSpinner size="lg" />
-                      </div>
-                    }>
+                    <Suspense
+                      fallback={
+                        <div className="min-h-screen flex items-center justify-center">
+                          <LoadingSpinner size="lg" />
+                        </div>
+                      }
+                    >
                       <Routes>
                         {/* Public Routes */}
                         <Route path="/" element={<HomePage />} />
@@ -63,6 +66,7 @@ function App() {
                         <Route path="/wishlist" element={<WishlistPage />} />
                         <Route path="/blog" element={<BlogPage />} />
                         <Route path="/blog/:slug" element={<BlogPostPage />} />
+                        <Route path="/contact" element={<ContactPage />} />
 
                         {/* Auth Routes */}
                         <Route path="/login" element={<LoginPage />} />
@@ -172,22 +176,22 @@ function App() {
                         duration: 4000,
                         style: {
                           background: '#363636',
-                          color: '#fff',
+                          color: '#fff'
                         },
                         success: {
                           duration: 3000,
                           iconTheme: {
                             primary: '#22c55e',
-                            secondary: '#fff',
-                          },
+                            secondary: '#fff'
+                          }
                         },
                         error: {
                           duration: 5000,
                           iconTheme: {
                             primary: '#ef4444',
-                            secondary: '#fff',
-                          },
-                        },
+                            secondary: '#fff'
+                          }
+                        }
                       }}
                     />
                   </div>

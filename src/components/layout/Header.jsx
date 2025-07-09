@@ -1,20 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import SafeIcon from '../common/SafeIcon';
 import Logo from '../common/Logo';
+import { useCart } from '../../contexts/CartContext';
 import * as FiIcons from 'react-icons/fi';
 
 const { FiShoppingCart, FiHeart, FiUser, FiMenu, FiSearch, FiX } = FiIcons;
 
-const Header = ({ cartCount = 0 }) => {
+const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
   const location = useLocation();
+  const { getCartCount, items } = useCart();
+
+  // Update cart count when cart items change
+  useEffect(() => {
+    const updateCartCount = () => {
+      const count = getCartCount();
+      setCartCount(count);
+    };
+
+    // Initial update
+    updateCartCount();
+
+    // Listen for cart updates
+    const handleCartUpdate = (event) => {
+      setCartCount(event.detail.count);
+    };
+    window.addEventListener('cartUpdated', handleCartUpdate);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('cartUpdated', handleCartUpdate);
+    };
+  }, [getCartCount, items]);
 
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Products', href: '/products' },
-    { name: 'Cart', href: '/cart' },
     { name: 'Wishlist', href: '/wishlist' },
     { name: 'Blog', href: '/blog' }
   ];
@@ -68,15 +92,20 @@ const Header = ({ cartCount = 0 }) => {
               className="p-2 text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all duration-200 relative"
             >
               <SafeIcon icon={FiShoppingCart} className="w-5 h-5" />
-              {cartCount > 0 && (
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium"
-                >
-                  {cartCount > 99 ? '99+' : cartCount}
-                </motion.span>
-              )}
+              <AnimatePresence>
+                {cartCount > 0 && (
+                  <motion.span
+                    key={cartCount}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0, opacity: 0 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30, duration: 0.2 }}
+                    className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium min-w-[20px]"
+                  >
+                    {cartCount > 99 ? '99+' : cartCount}
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </Link>
 
             {/* User */}
@@ -118,9 +147,30 @@ const Header = ({ cartCount = 0 }) => {
                         : 'text-gray-600 hover:text-primary-600 hover:bg-gray-50'
                     }`}
                   >
-                    {item.name}
+                    <div className="flex items-center justify-between">
+                      <span>{item.name}</span>
+                    </div>
                   </Link>
                 ))}
+                {/* Add Cart link only to mobile menu */}
+                <Link
+                  to="/cart"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`block px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
+                    isActive('/cart')
+                      ? 'text-primary-600 bg-primary-50'
+                      : 'text-gray-600 hover:text-primary-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span>Cart</span>
+                    {cartCount > 0 && (
+                      <span className="bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                        {cartCount > 99 ? '99+' : cartCount}
+                      </span>
+                    )}
+                  </div>
+                </Link>
               </nav>
             </motion.div>
           )}

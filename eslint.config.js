@@ -4,7 +4,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 
 export default [
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'public/sw.js'] },
   js.configs.recommended,
   {
     files: ['**/*.{js,jsx}'],
@@ -14,14 +14,12 @@ export default [
         ...globals.browser,
         ...globals.node,
         React: true,
-        JSX: true
+        JSX: true,
       },
       parserOptions: {
-        ecmaFeatures: {
-          jsx: true
-        },
-        sourceType: 'module'
-      }
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
     },
     plugins: {
       'react-hooks': reactHooks,
@@ -33,7 +31,8 @@ export default [
       'react-hooks/exhaustive-deps': 'off',
       'react-refresh/only-export-components': 'off',
       'no-unused-vars': 'warn',
-      'no-case-declarations': 'off'
-    }
-  }
+      'no-case-declarations': 'off',
+      'no-unreachable': 'error',
+    },
+  },
 ];

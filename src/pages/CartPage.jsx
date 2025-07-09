@@ -1,32 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SafeIcon from '../components/common/SafeIcon';
 import Logo from '../components/common/Logo';
+import { useCart } from '../contexts/CartContext';
 import * as FiIcons from 'react-icons/fi';
 
 const { FiTrash2, FiPlus, FiMinus, FiShoppingBag } = FiIcons;
 
 const CartPage = () => {
-  const cartItems = [
-    {
-      id: 1,
-      name: 'Premium Betta Fish',
-      price: 49.99,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=150&h=150&fit=crop'
-    },
-    {
-      id: 2,
-      name: 'Aquarium Heater',
-      price: 39.99,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=150&h=150&fit=crop'
-    }
-  ];
+  const { items, removeItem, updateQuantity, getCartTotal } = useCart();
+  const [cartItems, setCartItems] = useState([]);
 
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shipping = 5.99;
+  useEffect(() => {
+    setCartItems(items);
+  }, [items]);
+
+  const handleQuantityChange = (itemId, change) => {
+    const item = cartItems.find(item => item.id === itemId);
+    if (item) {
+      const newQuantity = item.quantity + change;
+      if (newQuantity >= 1 && newQuantity <= (item.stock || 999)) {
+        updateQuantity(itemId, newQuantity);
+      }
+    }
+  };
+
+  const handleRemoveItem = (itemId) => {
+    removeItem(itemId);
+  };
+
+  const subtotal = getCartTotal();
+  const shipping = subtotal > 0 ? 5.99 : 0;
   const total = subtotal + shipping;
 
   return (
@@ -45,7 +50,7 @@ const CartPage = () => {
       {/* Cart Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
@@ -72,25 +77,30 @@ const CartPage = () => {
                       transition={{ delay: index * 0.1 }}
                       className="p-6 flex items-center space-x-4"
                     >
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-20 h-20 object-cover rounded-lg"
-                      />
+                      <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded-lg" />
                       <div className="flex-1">
                         <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
                         <p className="text-primary-600 font-semibold">${item.price}</p>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <button className="p-1 text-gray-400 hover:text-gray-600">
+                        <button 
+                          className="p-1 text-gray-400 hover:text-gray-600"
+                          onClick={() => handleQuantityChange(item.id, -1)}
+                        >
                           <SafeIcon icon={FiMinus} className="w-4 h-4" />
                         </button>
                         <span className="w-8 text-center">{item.quantity}</span>
-                        <button className="p-1 text-gray-400 hover:text-gray-600">
+                        <button 
+                          className="p-1 text-gray-400 hover:text-gray-600"
+                          onClick={() => handleQuantityChange(item.id, 1)}
+                        >
                           <SafeIcon icon={FiPlus} className="w-4 h-4" />
                         </button>
                       </div>
-                      <button className="p-2 text-red-500 hover:text-red-700">
+                      <button 
+                        className="p-2 text-red-500 hover:text-red-700"
+                        onClick={() => handleRemoveItem(item.id)}
+                      >
                         <SafeIcon icon={FiTrash2} className="w-5 h-5" />
                       </button>
                     </motion.div>
@@ -121,7 +131,9 @@ const CartPage = () => {
                   <div className="border-t pt-3">
                     <div className="flex justify-between">
                       <span className="text-lg font-semibold">Total</span>
-                      <span className="text-lg font-semibold text-primary-600">${total.toFixed(2)}</span>
+                      <span className="text-lg font-semibold text-primary-600">
+                        ${total.toFixed(2)}
+                      </span>
                     </div>
                   </div>
                 </div>

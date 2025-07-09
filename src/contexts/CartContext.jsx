@@ -53,7 +53,7 @@ const cartReducer = (state, action) => {
 const initialState = {
   items: [],
   loading: false,
-  error: null,
+  error: null
 };
 
 export const CartProvider = ({ children }) => {
@@ -62,6 +62,7 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     const loadCart = async () => {
       try {
+        // First try to get cart from service
         const cartData = await cartService.getCart();
         dispatch({ type: 'SET_CART', payload: cartData });
       } catch (error) {
@@ -75,40 +76,42 @@ export const CartProvider = ({ children }) => {
     loadCart();
   }, []);
 
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    storageService.setCart(state.items);
+    // Trigger custom event for header to listen to
+    window.dispatchEvent(new CustomEvent('cartUpdated', { 
+      detail: { items: state.items, count: getCartCount() } 
+    }));
+  }, [state.items]);
+
   const addItem = async (product, quantity = 1) => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
-      
+
+      // Prepare cart item from product
       const cartItem = {
         id: product.id,
         name: product.name,
         price: product.price,
-        image: product.image,
+        image: product.image_url || product.image,
         quantity,
-        stock: product.stock,
+        stock: product.stock || 999,
       };
 
       // Check stock availability
-      if (quantity > product.stock) {
+      if (quantity > (product.stock || 999)) {
         toast.error('Not enough stock available');
         return;
       }
 
+      // Update local state first for immediate UI feedback
       dispatch({ type: 'ADD_ITEM', payload: cartItem });
-      
-      // Save to backend and localStorage
+
+      // Save to backend
       await cartService.addItem(cartItem);
-      const updatedCart = [...state.items];
-      const existingIndex = updatedCart.findIndex(item => item.id === product.id);
       
-      if (existingIndex >= 0) {
-        updatedCart[existingIndex].quantity += quantity;
-      } else {
-        updatedCart.push(cartItem);
-      }
-      
-      storageService.setCart(updatedCart);
-      toast.success('Item added to cart');
+      toast.success(`${product.name} added to cart!`);
     } catch (error) {
       console.error('Error adding item to cart:', error);
       toast.error('Failed to add item to cart');
@@ -120,15 +123,18 @@ export const CartProvider = ({ children }) => {
 
   const removeItem = async (productId) => {
     try {
+      // Update local state first for immediate UI feedback
       dispatch({ type: 'REMOVE_ITEM', payload: productId });
+
+      // Save to backend
       await cartService.removeItem(productId);
-      
-      const updatedCart = state.items.filter(item => item.id !== productId);
-      storageService.setCart(updatedCart);
       toast.success('Item removed from cart');
     } catch (error) {
       console.error('Error removing item from cart:', error);
       toast.error('Failed to remove item from cart');
+      // Reload cart from storage to revert state
+      const localCart = storageService.getCart();
+      dispatch({ type: 'SET_CART', payload: localCart });
     }
   };
 
@@ -139,34 +145,41 @@ export const CartProvider = ({ children }) => {
         return;
       }
 
+      // Check stock availability
       const item = state.items.find(item => item.id === productId);
       if (item && quantity > item.stock) {
         toast.error('Not enough stock available');
         return;
       }
 
+      // Update local state first for immediate UI feedback
       dispatch({ type: 'UPDATE_QUANTITY', payload: { id: productId, quantity } });
+
+      // Save to backend
       await cartService.updateQuantity(productId, quantity);
-      
-      const updatedCart = state.items.map(item =>
-        item.id === productId ? { ...item, quantity } : item
-      );
-      storageService.setCart(updatedCart);
     } catch (error) {
       console.error('Error updating quantity:', error);
       toast.error('Failed to update quantity');
+      // Reload cart from storage to revert state
+      const localCart = storageService.getCart();
+      dispatch({ type: 'SET_CART', payload: localCart });
     }
   };
 
   const clearCart = async () => {
     try {
+      // Update local state first for immediate UI feedback
       dispatch({ type: 'CLEAR_CART' });
+
+      // Save to backend
       await cartService.clearCart();
-      storageService.clearCart();
       toast.success('Cart cleared');
     } catch (error) {
       console.error('Error clearing cart:', error);
       toast.error('Failed to clear cart');
+      // Reload cart from storage to revert state
+      const localCart = storageService.getCart();
+      dispatch({ type: 'SET_CART', payload: localCart });
     }
   };
 
@@ -196,14 +209,10 @@ export const CartProvider = ({ children }) => {
     getCartTotal,
     getCartCount,
     isInCart,
-    getItemQuantity,
+    getItemQuantity
   };
 
-  return (
-    <CartContext.Provider value={value}>
-      {children}
-    </CartContext.Provider>
-  );
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
 export const useCart = () => {

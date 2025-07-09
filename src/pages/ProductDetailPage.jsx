@@ -5,6 +5,7 @@ import SafeIcon from '../components/common/SafeIcon';
 import Header from '../components/layout/Header';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { productService } from '../services/productService';
+import { useCart } from '../contexts/CartContext';
 import * as FiIcons from 'react-icons/fi';
 
 const { FiArrowLeft, FiHeart, FiShoppingCart, FiStar, FiPlus, FiMinus, FiCheck } = FiIcons;
@@ -16,6 +17,7 @@ const ProductDetailPage = () => {
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const { addItem, isInCart, getItemQuantity, updateQuantity } = useCart();
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -34,6 +36,13 @@ const ProductDetailPage = () => {
     loadProduct();
   }, [id]);
 
+  useEffect(() => {
+    // If the product is already in cart, set quantity to match cart
+    if (product && isInCart(product.id)) {
+      setQuantity(getItemQuantity(product.id));
+    }
+  }, [product, isInCart, getItemQuantity]);
+
   const handleQuantityChange = (change) => {
     const newQuantity = quantity + change;
     if (newQuantity >= 1 && newQuantity <= (product?.stock || 0)) {
@@ -41,10 +50,20 @@ const ProductDetailPage = () => {
     }
   };
 
+  const handleAddToCart = () => {
+    if (product) {
+      if (isInCart(product.id)) {
+        updateQuantity(product.id, quantity);
+      } else {
+        addItem(product, quantity);
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header cartCount={0} />
+        <Header />
         <div className="flex justify-center items-center py-20">
           <LoadingSpinner size="lg" />
         </div>
@@ -55,7 +74,7 @@ const ProductDetailPage = () => {
   if (error || !product) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header cartCount={0} />
+        <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-20">
             <p className="text-red-600 mb-4">Error loading product: {error || 'Product not found'}</p>
@@ -72,16 +91,12 @@ const ProductDetailPage = () => {
   }
 
   // Create multiple image views for demo (in real app, this would come from product data)
-  const images = [
-    product.image_url,
-    product.image_url,
-    product.image_url
-  ];
+  const images = [product.image_url, product.image_url, product.image_url];
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <Header cartCount={0} />
+      <Header />
 
       {/* Product Detail */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -113,9 +128,7 @@ const ProductDetailPage = () => {
                   key={index}
                   onClick={() => setSelectedImage(index)}
                   className={`bg-white rounded-xl shadow-soft overflow-hidden transition-all duration-200 ${
-                    selectedImage === index
-                      ? 'ring-2 ring-primary-500'
-                      : 'hover:shadow-md'
+                    selectedImage === index ? 'ring-2 ring-primary-500' : 'hover:shadow-md'
                   }`}
                 >
                   <img
@@ -146,9 +159,7 @@ const ProductDetailPage = () => {
                     key={i}
                     icon={FiStar}
                     className={`w-5 h-5 ${
-                      i < Math.floor(product.rating)
-                        ? 'text-secondary-500'
-                        : 'text-gray-300'
+                      i < Math.floor(product.rating) ? 'text-secondary-500' : 'text-gray-300'
                     }`}
                   />
                 ))}
@@ -168,7 +179,10 @@ const ProductDetailPage = () => {
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {product.features.map((feature, index) => (
                     <li key={index} className="flex items-center text-gray-600">
-                      <SafeIcon icon={FiCheck} className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" />
+                      <SafeIcon
+                        icon={FiCheck}
+                        className="w-4 h-4 text-green-500 mr-3 flex-shrink-0"
+                      />
                       {feature}
                     </li>
                   ))}
@@ -177,11 +191,13 @@ const ProductDetailPage = () => {
             )}
 
             <div className="flex items-center space-x-4">
-              <span className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${
-                product.in_stock
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-red-100 text-red-800'
-              }`}>
+              <span
+                className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${
+                  product.in_stock
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-red-100 text-red-800'
+                }`}
+              >
                 {product.in_stock ? `In Stock (${product.stock} available)` : 'Out of Stock'}
               </span>
             </div>
@@ -210,11 +226,16 @@ const ProductDetailPage = () => {
 
               <div className="flex space-x-4">
                 <button
-                  className="flex-1 bg-gradient-brand text-white px-6 py-3 rounded-xl font-medium hover:bg-gradient-brand-dark transition-all duration-200 shadow-brand hover:shadow-brand-lg transform hover:-translate-y-1 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleAddToCart}
+                  className={`flex-1 ${
+                    isInCart(product.id)
+                      ? 'bg-green-600 hover:bg-green-700'
+                      : 'bg-gradient-brand hover:bg-gradient-brand-dark'
+                  } text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-brand hover:shadow-brand-lg transform hover:-translate-y-1 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed`}
                   disabled={!product.in_stock}
                 >
                   <SafeIcon icon={FiShoppingCart} className="w-5 h-5" />
-                  <span>Add to Cart</span>
+                  <span>{isInCart(product.id) ? 'Update Cart' : 'Add to Cart'}</span>
                 </button>
                 <button className="px-6 py-3 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-primary-300 transition-all duration-200">
                   <SafeIcon icon={FiHeart} className="w-5 h-5" />
