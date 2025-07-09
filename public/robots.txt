@@ -1,0 +1,65 @@
+User-agent: *
+Disallow: /
+Crawl-delay: 86400
+
+User-agent: Googlebot
+Disallow: /
+
+User-agent: Bingbot
+Disallow: /
+
+User-agent: Slurp
+Disallow: /
+
+User-agent: DuckDuckBot
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: facebookexternalhit
+Disallow: /
+
+User-agent: Twitterbot
+Disallow: /
+
+User-agent: LinkedInBot
+Disallow: /
+
+User-agent: WhatsApp
+Disallow: /
+
+# Block all crawlers from all content
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /user/
+Disallow: /account/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /search/
+Disallow: /products/
+Disallow: /categories/
+Disallow: /blog/
+Disallow: /auth/
+Disallow: /login/
+Disallow: /register/
+Disallow: /profile/
+Disallow: /settings/
+Disallow: /wishlist/
+Disallow: /reviews/
+Disallow: /support/
+Disallow: /contact/
+Disallow: /about/
+Disallow: /privacy/
+Disallow: /terms/
+
+# No sitemap provided
+# Sitemap: 
+
+# Additional security headers
+X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
