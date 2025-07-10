@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import Logo from '../components/common/Logo';
+import Layout from '../components/layout/Layout';
 
 const BlogPage = () => {
   const posts = [
@@ -16,22 +16,9 @@ const BlogPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
-              <Logo size="lg" showText={true} textSize="xl" />
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Blog Content */}
+    <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Fish Care Blog</h1>
-        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post, index) => (
             <motion.article
@@ -59,7 +46,7 @@ const BlogPage = () => {
           ))}
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import SafeIcon from '../components/common/SafeIcon';
-import Header from '../components/layout/Header';
-import Logo from '../components/common/Logo';
+import Layout from '../components/layout/Layout';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ContactSection from '../components/home/ContactSection';
 import ReviewsCarousel from '../components/home/ReviewsCarousel';
@@ -11,7 +10,7 @@ import { productService } from '../services/productService';
 import { useCart } from '../contexts/CartContext';
 import * as FiIcons from 'react-icons/fi';
 
-const { FiStar, FiTrendingUp, FiShield, FiTruck, FiHeart, FiLock, FiCheck } = FiIcons;
+const { FiStar, FiTrendingUp, FiShield, FiTruck, FiHeart, FiCheck } = FiIcons;
 
 const HomePage = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -66,10 +65,7 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <Header />
-
+    <Layout>
       {/* Hero Section */}
       <section className="relative bg-primary-600 text-white overflow-hidden">
         <div className="absolute inset-0">
@@ -103,10 +99,10 @@ const HomePage = () => {
                 Shop Now
               </Link>
               <Link
-                to="/blog"
+                to="/care-guides"
                 className="border-2 border-white/30 text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/10 transition-all duration-300 backdrop-blur-sm"
               >
-                Learn More
+                Care Guides
               </Link>
             </motion.div>
           </div>
@@ -203,9 +199,10 @@ const HomePage = () => {
                       </span>
                       <button
                         onClick={() => handleAddToCart(product)}
-                        className={`${isInCart(product.id) 
-                          ? 'bg-green-600 hover:bg-green-700' 
-                          : 'bg-gradient-brand hover:bg-gradient-brand-dark'
+                        className={`${
+                          isInCart(product.id)
+                            ? 'bg-green-600 hover:bg-green-700'
+                            : 'bg-gradient-brand hover:bg-gradient-brand-dark'
                         } text-white px-6 py-2 rounded-xl font-medium transition-all duration-200 shadow-brand hover:shadow-brand-lg transform hover:-translate-y-1 flex items-center space-x-2`}
                       >
                         <SafeIcon icon={isInCart(product.id) ? FiCheck : FiStar} className="w-4 h-4" />
@@ -248,11 +245,15 @@ const HomePage = () => {
                 viewport={{ once: true }}
                 className="text-center bg-white rounded-2xl p-8 shadow-soft hover:shadow-medium transition-all duration-300 hover:-translate-y-1 border border-gray-100"
               >
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 ${
-                  feature.color === 'primary' ? 'bg-primary-100 text-primary-600' :
-                  feature.color === 'secondary' ? 'bg-secondary-100 text-secondary-600' :
-                  'bg-accent-100 text-accent-600'
-                }`}>
+                <div
+                  className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 ${
+                    feature.color === 'primary'
+                      ? 'bg-primary-100 text-primary-600'
+                      : feature.color === 'secondary'
+                      ? 'bg-secondary-100 text-secondary-600'
+                      : 'bg-accent-100 text-accent-600'
+                  }`}
+                >
                   <SafeIcon icon={feature.icon} className="w-8 h-8" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
@@ -270,112 +271,7 @@ const HomePage = () => {
 
       {/* Contact Section */}
       <ContactSection />
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="mb-6">
-                <Logo size="lg" showText={true} textSize="xl" className="mb-4" />
-              </div>
-              <p className="text-gray-400 leading-relaxed">
-                Your trusted source for premium betta fish, guppies, and aquarium supplies.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link to="/products" className="text-gray-400 hover:text-white transition-colors">
-                    Products
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/cart" className="text-gray-400 hover:text-white transition-colors">
-                    Cart
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/wishlist" className="text-gray-400 hover:text-white transition-colors">
-                    Wishlist
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/orders" className="text-gray-400 hover:text-white transition-colors">
-                    Orders
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-6">Support</h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link to="/contact" className="text-gray-400 hover:text-white transition-colors">
-                    Contact Us
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/info#shipping-info" className="text-gray-400 hover:text-white transition-colors">
-                    Shipping Info
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/info#returns" className="text-gray-400 hover:text-white transition-colors">
-                    Returns
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/info#faq" className="text-gray-400 hover:text-white transition-colors">
-                    FAQ
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-6">Learn</h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link to="/blog" className="text-gray-400 hover:text-white transition-colors">
-                    Fish Care Blog
-                  </Link>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                    Care Guides
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                    Tips & Tricks
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                    Community
-                  </a>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/login"
-                    className="flex items-center text-gray-400 hover:text-white transition-colors group"
-                  >
-                    <SafeIcon icon={FiLock} className="w-4 h-4 mr-2 group-hover:text-primary-300 transition-colors" />
-                    <span>Admin Access</span>
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-12 pt-8 text-center">
-            <p className="text-gray-400">
-              © 2024 Gupfee House. All rights reserved. | Private Application
-            </p>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </Layout>
   );
 };
 

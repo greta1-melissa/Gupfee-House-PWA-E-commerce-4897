@@ -13,6 +13,7 @@ import PWAUpdateNotification from './components/pwa/PWAUpdateNotification';
 import OfflineIndicator from './components/pwa/OfflineIndicator';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import AdminRoute from './components/admin/AdminRoute';
+import Layout from './components/layout/Layout';
 import './App.css';
 
 // Lazy load components for better performance
@@ -28,6 +29,9 @@ const BlogPage = lazy(() => import('./pages/BlogPage'));
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const InfoPage = lazy(() => import('./pages/InfoPage'));
+const CareGuidesPage = lazy(() => import('./pages/CareGuidesPage'));
+const TipsTricksPage = lazy(() => import('./pages/TipsTricksPage'));
+const CommunityPage = lazy(() => import('./pages/CommunityPage'));
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
@@ -67,6 +71,9 @@ function App() {
                         <Route path="/blog/:slug" element={<BlogPostPage />} />
                         <Route path="/contact" element={<ContactPage />} />
                         <Route path="/info" element={<InfoPage />} />
+                        <Route path="/care-guides" element={<CareGuidesPage />} />
+                        <Route path="/tips-tricks" element={<TipsTricksPage />} />
+                        <Route path="/community" element={<CommunityPage />} />
 
                         {/* Auth Routes */}
                         <Route path="/login" element={<LoginPage />} />

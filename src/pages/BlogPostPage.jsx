@@ -2,14 +2,13 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SafeIcon from '../components/common/SafeIcon';
-import Logo from '../components/common/Logo';
+import Layout from '../components/layout/Layout';
 import * as FiIcons from 'react-icons/fi';
 
 const { FiArrowLeft } = FiIcons;
 
 const BlogPostPage = () => {
   const { slug } = useParams();
-  
   const post = {
     title: 'Complete Guide to Betta Fish Care',
     content: 'This is where the full blog post content would go...',
@@ -19,28 +18,12 @@ const BlogPostPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
-              <Logo size="lg" showText={true} textSize="xl" />
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Post Content */}
+    <Layout>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Link
-          to="/blog"
-          className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-6"
-        >
+        <Link to="/blog" className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-6">
           <SafeIcon icon={FiArrowLeft} className="w-4 h-4 mr-2" />
           Back to Blog
         </Link>
-
         <motion.article
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -62,7 +45,7 @@ const BlogPostPage = () => {
           </div>
         </motion.article>
       </div>
-    </div>
+    </Layout>
   );
 };
 
