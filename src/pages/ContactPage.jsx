@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SafeIcon from '../components/common/SafeIcon';
-import Header from '../components/layout/Header';
+import Layout from '../components/layout/Layout';
 import toast from 'react-hot-toast';
 import * as FiIcons from 'react-icons/fi';
 
@@ -20,10 +20,7 @@ const ContactPage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -84,9 +81,7 @@ const ContactPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-
+    <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
         <motion.div
@@ -96,8 +91,7 @@ const ContactPage = () => {
         >
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Have a question about our fish or need aquarium advice? We're here to help! 
-            Our team of aquarium experts is ready to assist you.
+            Have a question about our fish or need aquarium advice? We're here to help! Our team of aquarium experts is ready to assist you.
           </p>
         </motion.div>
 
@@ -220,7 +214,7 @@ const ContactPage = () => {
                 <SafeIcon icon={FiHelpCircle} className="w-6 h-6 text-primary-600 mr-3" />
                 <h2 className="text-2xl font-semibold text-gray-900">Get in Touch</h2>
               </div>
-              
+
               <div className="space-y-6">
                 {contactInfo.map((item, index) => (
                   <motion.div
@@ -242,25 +236,19 @@ const ContactPage = () => {
                 ))}
               </div>
             </div>
-            
+
             {/* Need Immediate Help */}
             <div className="bg-white rounded-xl shadow-soft p-8">
               <h3 className="text-xl font-semibold mb-4">Need Immediate Help?</h3>
               <div className="space-y-4">
-                <Link
-                  to="/orders"
-                  className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                >
+                <Link to="/orders" className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <SafeIcon icon={FiShoppingBag} className="w-5 h-5 mr-3 text-primary-600" />
                   <div>
                     <p className="font-medium text-gray-900">Check Order Status</p>
                     <p className="text-sm text-gray-600">Track your recent orders</p>
                   </div>
                 </Link>
-                <Link
-                  to="/blog"
-                  className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                >
+                <Link to="/blog" className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <SafeIcon icon={FiHelpCircle} className="w-5 h-5 mr-3 text-primary-600" />
                   <div>
                     <p className="font-medium text-gray-900">Fish Care Guides</p>
@@ -271,33 +259,8 @@ const ContactPage = () => {
             </div>
           </motion.div>
         </div>
-
-        {/* FAQ Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-16 bg-white rounded-xl shadow-soft p-8"
-        >
-          <h2 className="text-2xl font-semibold text-gray-900 mb-8 text-center">
-            Frequently Asked Questions
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {[
-              { question: "What's your live arrival guarantee?", answer: "We guarantee all fish arrive alive and healthy. If any fish don't arrive in good condition, we'll replace them at no cost." },
-              { question: "How do you ship live fish?", answer: "We use insulated boxes with oxygen and temperature control. All shipments are sent overnight to ensure fish safety." },
-              { question: "Do you offer aquarium setup services?", answer: "Yes! We provide consultation and setup services for new aquariums. Contact us to schedule a consultation." },
-              { question: "What if I have issues with my order?", answer: "Contact us immediately if there are any issues. Our customer service team is here to help resolve any problems." }
-            ].map((faq, index) => (
-              <div key={index} className="border-l-4 border-primary-500 pl-4">
-                <h3 className="font-semibold text-gray-900 mb-2">{faq.question}</h3>
-                <p className="text-gray-600">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </motion.div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

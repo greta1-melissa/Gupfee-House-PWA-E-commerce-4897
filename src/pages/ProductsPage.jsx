@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import SafeIcon from '../components/common/SafeIcon';
-import Header from '../components/layout/Header';
+import Layout from '../components/layout/Layout';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { productService } from '../services/productService';
 import { useCart } from '../contexts/CartContext';
 import * as FiIcons from 'react-icons/fi';
 
-const { FiFilter, FiGrid, FiList, FiHeart, FiShoppingCart, FiStar } = FiIcons;
+const { FiFilter, FiGrid, FiList, FiHeart, FiShoppingCart, FiStar, FiCheck } = FiIcons;
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -52,11 +52,7 @@ const ProductsPage = () => {
     : products.filter(product => product.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <Header />
-
-      {/* Page Content */}
+    <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Title */}
         <div className="mb-6">
@@ -72,7 +68,7 @@ const ProductsPage = () => {
           <div className="text-center py-20">
             <p className="text-red-600 mb-4">Error loading products: {error}</p>
             <button 
-              onClick={() => window.location.reload()} 
+              onClick={() => window.location.reload()}
               className="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors"
             >
               Try Again
@@ -106,15 +102,15 @@ const ProductsPage = () => {
                     </button>
                   ))}
                 </div>
-                
+
                 {/* View Mode Toggle */}
                 <div className="flex items-center space-x-2">
                   <span className="text-sm text-gray-500 mr-2">View:</span>
                   <button
                     onClick={() => setViewMode('grid')}
                     className={`p-2 rounded-lg transition-all duration-200 ${
-                      viewMode === 'grid' 
-                        ? 'bg-primary-100 text-primary-600' 
+                      viewMode === 'grid'
+                        ? 'bg-primary-100 text-primary-600'
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                   >
@@ -123,8 +119,8 @@ const ProductsPage = () => {
                   <button
                     onClick={() => setViewMode('list')}
                     className={`p-2 rounded-lg transition-all duration-200 ${
-                      viewMode === 'list' 
-                        ? 'bg-primary-100 text-primary-600' 
+                      viewMode === 'list'
+                        ? 'bg-primary-100 text-primary-600'
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                   >
@@ -164,9 +160,9 @@ const ProductsPage = () => {
                   }`}
                 >
                   <div className={`relative ${viewMode === 'list' ? 'w-1/3' : ''}`}>
-                    <img 
-                      src={product.image_url} 
-                      alt={product.name} 
+                    <img
+                      src={product.image_url}
+                      alt={product.name}
                       className={`object-cover group-hover:scale-110 transition-transform duration-500 ${
                         viewMode === 'list' ? 'w-full h-full' : 'w-full h-64'
                       }`}
@@ -184,6 +180,7 @@ const ProductsPage = () => {
                       </button>
                     </div>
                   </div>
+
                   <div className={`p-6 ${viewMode === 'list' ? 'w-2/3 flex flex-col justify-between' : ''}`}>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
@@ -196,9 +193,7 @@ const ProductsPage = () => {
                               key={i}
                               icon={FiStar}
                               className={`w-4 h-4 ${
-                                i < Math.floor(product.rating) 
-                                  ? 'text-secondary-500' 
-                                  : 'text-gray-300'
+                                i < Math.floor(product.rating) ? 'text-secondary-500' : 'text-gray-300'
                               }`}
                             />
                           ))}
@@ -211,20 +206,18 @@ const ProductsPage = () => {
                         <p className="text-gray-600 text-sm mb-4">{product.description}</p>
                       )}
                     </div>
+
                     <div className="flex items-center justify-between">
                       <span className="text-2xl font-bold text-primary-600">${product.price}</span>
                       <button
                         onClick={() => handleAddToCart(product)}
                         className={`${
-                          isInCart(product.id) 
-                            ? 'bg-green-600 hover:bg-green-700' 
+                          isInCart(product.id)
+                            ? 'bg-green-600 hover:bg-green-700'
                             : 'bg-gradient-brand hover:bg-gradient-brand-dark'
                         } text-white px-6 py-2 rounded-xl font-medium transition-all duration-200 shadow-brand hover:shadow-brand-lg transform hover:-translate-y-1 flex items-center space-x-2`}
                       >
-                        <SafeIcon 
-                          icon={isInCart(product.id) ? FiCheck : FiShoppingCart} 
-                          className="w-4 h-4" 
-                        />
+                        <SafeIcon icon={isInCart(product.id) ? FiCheck : FiShoppingCart} className="w-4 h-4" />
                         <span>{isInCart(product.id) ? 'Added' : 'Add to Cart'}</span>
                       </button>
                     </div>
@@ -254,7 +247,7 @@ const ProductsPage = () => {
           </>
         )}
       </div>
-    </div>
+    </Layout>
   );
 };
 

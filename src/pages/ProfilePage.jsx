@@ -1,23 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import Logo from '../components/common/Logo';
+import Layout from '../components/layout/Layout';
 
 const ProfilePage = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
-              <Logo size="lg" showText={true} textSize="xl" />
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Profile Content */}
+    <Layout>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -28,7 +16,7 @@ const ProfilePage = () => {
           <p className="text-gray-600">Profile management will be implemented here.</p>
         </motion.div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

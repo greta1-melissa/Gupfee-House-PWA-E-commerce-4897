@@ -3,20 +3,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import SafeIcon from '../components/common/SafeIcon';
-import Header from '../components/layout/Header';
+import Layout from '../components/layout/Layout';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { orderService } from '../services/orderService';
 import * as FiIcons from 'react-icons/fi';
 
-const { 
-  FiShoppingBag, FiPackage, FiTruck, FiCheck, FiX, 
-  FiChevronRight, FiCalendar, FiClock, FiArrowLeft
-} = FiIcons;
+const { FiShoppingBag, FiPackage, FiTruck, FiCheck, FiX, FiChevronRight, FiCalendar, FiClock, FiArrowLeft } = FiIcons;
 
 const OrdersPage = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -63,35 +59,23 @@ const OrdersPage = () => {
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'pending':
-        return <SafeIcon icon={FiClock} className="w-5 h-5 text-yellow-500" />;
-      case 'processing':
-        return <SafeIcon icon={FiPackage} className="w-5 h-5 text-blue-500" />;
-      case 'shipped':
-        return <SafeIcon icon={FiTruck} className="w-5 h-5 text-purple-500" />;
-      case 'delivered':
-        return <SafeIcon icon={FiCheck} className="w-5 h-5 text-green-500" />;
-      case 'cancelled':
-        return <SafeIcon icon={FiX} className="w-5 h-5 text-red-500" />;
-      default:
-        return <SafeIcon icon={FiClock} className="w-5 h-5 text-gray-500" />;
+      case 'pending': return <SafeIcon icon={FiClock} className="w-5 h-5 text-yellow-500" />;
+      case 'processing': return <SafeIcon icon={FiPackage} className="w-5 h-5 text-blue-500" />;
+      case 'shipped': return <SafeIcon icon={FiTruck} className="w-5 h-5 text-purple-500" />;
+      case 'delivered': return <SafeIcon icon={FiCheck} className="w-5 h-5 text-green-500" />;
+      case 'cancelled': return <SafeIcon icon={FiX} className="w-5 h-5 text-red-500" />;
+      default: return <SafeIcon icon={FiClock} className="w-5 h-5 text-gray-500" />;
     }
   };
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'processing':
-        return 'bg-blue-100 text-blue-800';
-      case 'shipped':
-        return 'bg-purple-100 text-purple-800';
-      case 'delivered':
-        return 'bg-green-100 text-green-800';
-      case 'cancelled':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'processing': return 'bg-blue-100 text-blue-800';
+      case 'shipped': return 'bg-purple-100 text-purple-800';
+      case 'delivered': return 'bg-green-100 text-green-800';
+      case 'cancelled': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -102,19 +86,16 @@ const OrdersPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header />
+      <Layout>
         <div className="flex justify-center items-center py-20">
           <LoadingSpinner size="lg" />
         </div>
-      </div>
+      </Layout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      
+    <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <AnimatePresence mode="wait">
           {viewMode === 'list' ? (
@@ -148,7 +129,7 @@ const OrdersPage = () => {
                   <p className="text-gray-600 mb-6">
                     You haven't placed any orders yet. Start shopping to place your first order!
                   </p>
-                  <Link 
+                  <Link
                     to="/products"
                     className="inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
                   >
@@ -158,7 +139,7 @@ const OrdersPage = () => {
               ) : (
                 <div className="space-y-4">
                   {orders.map((order) => (
-                    <motion.div 
+                    <motion.div
                       key={order.id}
                       className="bg-white rounded-xl shadow-soft overflow-hidden hover:shadow-medium transition-shadow cursor-pointer"
                       whileHover={{ y: -2 }}
@@ -268,17 +249,13 @@ const OrdersPage = () => {
                     <div className="relative">
                       {/* Progress line */}
                       <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200"></div>
-
+                      
                       {/* Progress steps */}
                       <div className="space-y-6">
                         {selectedOrder.order_history.map((history, index) => (
                           <div key={index} className="relative flex items-start">
-                            <div className={`absolute left-6 top-5 -ml-px h-full w-0.5 ${
-                              index === selectedOrder.order_history.length - 1 ? 'bg-transparent' : 'bg-gray-200'
-                            }`}></div>
-                            <div className={`relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full ${
-                              getStatusColor(history.status)
-                            }`}>
+                            <div className={`absolute left-6 top-5 -ml-px h-full w-0.5 ${index === selectedOrder.order_history.length - 1 ? 'bg-transparent' : 'bg-gray-200'}`}></div>
+                            <div className={`relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full ${getStatusColor(history.status)}`}>
                               {getStatusIcon(history.status)}
                             </div>
                             <div className="ml-4 min-w-0 flex-1">
@@ -300,10 +277,10 @@ const OrdersPage = () => {
                     {selectedOrder.order_items?.map((item) => (
                       <div key={item.id || item.product_id} className="py-4 flex">
                         <div className="flex-shrink-0 w-20 h-20">
-                          <img 
-                            src={item.product_image} 
-                            alt={item.product_name} 
-                            className="w-full h-full object-cover rounded-md" 
+                          <img
+                            src={item.product_image}
+                            alt={item.product_name}
+                            className="w-full h-full object-cover rounded-md"
                           />
                         </div>
                         <div className="ml-4 flex-1">
@@ -408,14 +385,14 @@ const OrdersPage = () => {
                 {selectedOrder.status !== 'cancelled' && selectedOrder.status !== 'delivered' && (
                   <div className="p-6 bg-gray-50 border-t border-gray-200">
                     <div className="flex justify-end space-x-4">
-                      <Link 
-                        to="/support" 
+                      <Link
+                        to="/support"
                         className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                       >
                         Need Help?
                       </Link>
                       {selectedOrder.status === 'pending' && (
-                        <button 
+                        <button
                           className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                           onClick={() => {
                             // In a real app, this would open a confirmation dialog
@@ -434,7 +411,7 @@ const OrdersPage = () => {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </Layout>
   );
 };
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SafeIcon from '../components/common/SafeIcon';
-import Logo from '../components/common/Logo';
+import Layout from '../components/layout/Layout';
 import { useCart } from '../contexts/CartContext';
 import * as FiIcons from 'react-icons/fi';
 
@@ -35,19 +35,7 @@ const CartPage = () => {
   const total = subtotal + shipping;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
-              <Logo size="lg" showText={true} textSize="xl" />
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* Cart Content */}
+    <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
 
@@ -77,27 +65,31 @@ const CartPage = () => {
                       transition={{ delay: index * 0.1 }}
                       className="p-6 flex items-center space-x-4"
                     >
-                      <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded-lg" />
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-20 h-20 object-cover rounded-lg"
+                      />
                       <div className="flex-1">
                         <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
                         <p className="text-primary-600 font-semibold">${item.price}</p>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <button 
+                        <button
                           className="p-1 text-gray-400 hover:text-gray-600"
                           onClick={() => handleQuantityChange(item.id, -1)}
                         >
                           <SafeIcon icon={FiMinus} className="w-4 h-4" />
                         </button>
                         <span className="w-8 text-center">{item.quantity}</span>
-                        <button 
+                        <button
                           className="p-1 text-gray-400 hover:text-gray-600"
                           onClick={() => handleQuantityChange(item.id, 1)}
                         >
                           <SafeIcon icon={FiPlus} className="w-4 h-4" />
                         </button>
                       </div>
-                      <button 
+                      <button
                         className="p-2 text-red-500 hover:text-red-700"
                         onClick={() => handleRemoveItem(item.id)}
                       >
@@ -154,7 +146,7 @@ const CartPage = () => {
           )}
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

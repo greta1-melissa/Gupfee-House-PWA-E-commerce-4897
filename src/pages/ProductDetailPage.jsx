@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SafeIcon from '../components/common/SafeIcon';
-import Header from '../components/layout/Header';
+import Layout from '../components/layout/Layout';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { productService } from '../services/productService';
 import { useCart } from '../contexts/CartContext';
@@ -62,19 +62,17 @@ const ProductDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header />
+      <Layout>
         <div className="flex justify-center items-center py-20">
           <LoadingSpinner size="lg" />
         </div>
-      </div>
+      </Layout>
     );
   }
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header />
+      <Layout>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-20">
             <p className="text-red-600 mb-4">Error loading product: {error || 'Product not found'}</p>
@@ -86,7 +84,7 @@ const ProductDetailPage = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </Layout>
     );
   }
 
@@ -94,11 +92,7 @@ const ProductDetailPage = () => {
   const images = [product.image_url, product.image_url, product.image_url];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <Header />
-
-      {/* Product Detail */}
+    <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Link
           to="/products"
@@ -179,10 +173,7 @@ const ProductDetailPage = () => {
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {product.features.map((feature, index) => (
                     <li key={index} className="flex items-center text-gray-600">
-                      <SafeIcon
-                        icon={FiCheck}
-                        className="w-4 h-4 text-green-500 mr-3 flex-shrink-0"
-                      />
+                      <SafeIcon icon={FiCheck} className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" />
                       {feature}
                     </li>
                   ))}
@@ -259,7 +250,7 @@ const ProductDetailPage = () => {
           </motion.div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

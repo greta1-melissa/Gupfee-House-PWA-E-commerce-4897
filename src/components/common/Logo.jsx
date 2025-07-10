@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { generateFallbackLogo } from '../../utils/logoHelper';
 
-const Logo = ({ size = 'md', className = '', showText = false, textSize = 'base' }) => {
+const Logo = ({ size = 'md', className = '', showText = false, textSize = 'base', textColor = 'gray-900' }) => {
   const [logoSrc, setLogoSrc] = useState(null);
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,7 +40,7 @@ const Logo = ({ size = 'md', className = '', showText = false, textSize = 'base'
           console.warn(`Failed to load logo from ${url}:`, error);
         }
       }
-
+      
       // If all URLs fail, use fallback
       console.warn('All logo URLs failed, using fallback');
       setHasError(true);
@@ -52,20 +52,20 @@ const Logo = ({ size = 'md', className = '', showText = false, textSize = 'base'
   }, []);
 
   const sizeClasses = {
-    xs: 'w-4 h-4',
-    sm: 'w-6 h-6',
-    md: 'w-8 h-8',
-    lg: 'w-12 h-12',
-    xl: 'w-16 h-16',
+    'xs': 'w-4 h-4',
+    'sm': 'w-6 h-6',
+    'md': 'w-8 h-8',
+    'lg': 'w-12 h-12',
+    'xl': 'w-16 h-16',
     '2xl': 'w-20 h-20'
   };
 
   const textSizeClasses = {
-    xs: 'text-xs',
-    sm: 'text-sm',
-    base: 'text-base',
-    lg: 'text-lg',
-    xl: 'text-xl',
+    'xs': 'text-xs',
+    'sm': 'text-sm',
+    'base': 'text-base',
+    'lg': 'text-lg',
+    'xl': 'text-xl',
     '2xl': 'text-2xl'
   };
 
@@ -102,10 +102,10 @@ const Logo = ({ size = 'md', className = '', showText = false, textSize = 'base'
       />
       {showText && (
         <div className="ml-3">
-          <h1 className={`${textSizeClasses[textSize]} font-bold text-gray-900 leading-tight`}>
+          <h1 className={`${textSizeClasses[textSize]} font-bold text-${textColor} leading-tight`}>
             Gupfee House
           </h1>
-          <p className={`${textSize === 'xs' ? 'text-xs' : textSize === 'sm' ? 'text-xs' : 'text-sm'} text-gray-500 -mt-1`}>
+          <p className={`${textSize === 'xs' ? 'text-xs' : textSize === 'sm' ? 'text-xs' : 'text-sm'} text-${textColor === 'white' ? 'gray-300' : 'gray-500'} -mt-1`}>
             Premium Aquarium Supplies
           </p>
         </div>
